@@ -1,0 +1,9 @@
+spring:
+  main:
+    web-application-type: none
+
+simulation:
+  cell:
+    columns: 12
+    rows: 8
+    size: 50

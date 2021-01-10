@@ -12,11 +12,11 @@ class Grid extends Pane {
 
     private final Cell[][] cells;
 
-    public Grid(int columns, int rows, double width, double height) {
+    public Grid(int columns, int rows, int cellSize) {
         this.columns = columns;
         this.rows = rows;
-        this.width = width;
-        this.height = height;
+        this.width = columns * cellSize;
+        this.height = rows * cellSize;
 
         cells = new Cell[rows][columns];
 
@@ -46,5 +46,9 @@ class Grid extends Pane {
         cell.setPrefHeight(h);
 
         getChildren().add(cell);
+    }
+
+    public Cell getCell(Location location) {
+        return cells[location.getColumnIndex()][location.getRowIndex()];
     }
 }
