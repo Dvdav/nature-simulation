@@ -59,4 +59,8 @@ public class SimulationArea {
     public int getRows() {
         return rows;
     }
+
+    public void rollDay() {
+        System.out.println("Day was rolled");
+    }
 }

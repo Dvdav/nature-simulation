@@ -49,6 +49,8 @@ public class StageListener {
             stage.setScene(scene);
             stage.setTitle(applicationTitle);
             stage.show();
+
+            applicationContext.publishEvent(new SceneReadyEvent(scene));
         } catch (IOException e) {
             e.printStackTrace();
         }
