@@ -1,6 +1,7 @@
 package dvdav.controller;
 
 import dvdav.math.Coordinates;
+import dvdav.math.CoordinatesIterator;
 import dvdav.nature.SimulationArea;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -34,20 +35,19 @@ public class MainStageController {
 
     public void initialize() {
         simulationArea.populateAnimals();
-        mainPane.getChildren().add(grid);
         syncCells();
+        mainPane.getChildren().add(grid);
     }
 
     private void syncCells() {
-        for (int x = 0; x < simulationArea.getRows(); x++) {
-            for (int y = 0; y < simulationArea.getColumns(); y++) {
-                Coordinates coordinates = Coordinates.of(x, y);
-                dvdav.nature.Cell areaCell = simulationArea.getCell(coordinates);
+        CoordinatesIterator it = new CoordinatesIterator(simulationArea.getRows(), simulationArea.getColumns());
+        while (it.hasNext()) {
+            Coordinates coordinates = it.next();
+            dvdav.nature.Cell areaCell = simulationArea.getCell(coordinates);
 
-                if (areaCell.isPopulated()) {
-                    Cell gridCell = grid.getCell(coordinates);
-                    gridCell.getChildren().add(new ImageView(wolf));
-                }
+            if (areaCell.isPopulated()) {
+                Cell gridCell = grid.getCell(coordinates);
+                gridCell.getChildren().add(new ImageView(wolf));
             }
         }
     }
