@@ -1,5 +1,6 @@
 package dvdav.controller;
 
+import dvdav.math.Coordinates;
 import javafx.scene.layout.Pane;
 
 class Grid extends Pane {
@@ -22,7 +23,7 @@ class Grid extends Pane {
 
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
-                Cell cell = new Cell(column, row);
+                Cell cell = new Cell(new Coordinates(column, row));
                 add(cell, column, row);
             }
         }
@@ -48,7 +49,7 @@ class Grid extends Pane {
         getChildren().add(cell);
     }
 
-    public Cell getCell(Location location) {
-        return cells[location.getColumnIndex()][location.getRowIndex()];
+    public Cell getCell(Coordinates coordinates) {
+        return cells[coordinates.getX()][coordinates.getY()];
     }
 }

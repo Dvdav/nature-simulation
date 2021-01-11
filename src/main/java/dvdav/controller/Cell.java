@@ -1,6 +1,6 @@
 package dvdav.controller;
 
-import javafx.geometry.Insets;
+import dvdav.math.Coordinates;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -9,12 +9,10 @@ class Cell extends Pane {
 
     private static final Image GRASS = new Image(Cell.class.getResourceAsStream("../../grass.png"));
 
-    private final int column;
-    private final int row;
+    private final Coordinates coordinates;
 
-    public Cell(int column, int row) {
-        this.column = column;
-        this.row = row;
+    public Cell(Coordinates coordinates) {
+        this.coordinates = coordinates;
 
         setOpacity(0.9);
         setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0.1))));
@@ -24,6 +22,6 @@ class Cell extends Pane {
     }
 
     public String toString() {
-        return this.column + "/" + this.row;
+        return coordinates.toString();
     }
 }
