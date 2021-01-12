@@ -1,7 +1,6 @@
 package dvdav.math;
 
 import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class CoordinatesIterator implements Iterator<Coordinates> {
 
@@ -20,12 +19,12 @@ public class CoordinatesIterator implements Iterator<Coordinates> {
 
     @Override
     public boolean hasNext() {
-        return !(currentX == rows - 1 && currentY == columns - 1);
+        return !(currentX == columns - 1 && currentY == rows - 1);
     }
 
     @Override
     public Coordinates next() {
-        if (currentX == rows) {
+        if (currentX == columns) {
             currentX = 0;
             currentY++;
         }

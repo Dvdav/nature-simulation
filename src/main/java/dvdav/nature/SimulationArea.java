@@ -1,12 +1,9 @@
 package dvdav.nature;
 
 import dvdav.math.Coordinates;
+import dvdav.math.CoordinatesIterator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 @Component
 public class SimulationArea {
@@ -14,7 +11,6 @@ public class SimulationArea {
     private final int rows;
     private final int columns;
     private final Cell[][] cells;
-    private final Map<Animal, Coordinates> animalCoordinates;
 
     public SimulationArea(
             @Value("${simulation.cell.rows}") int rows,
@@ -29,8 +25,6 @@ public class SimulationArea {
                 cells[y][x] = new Cell(new Coordinates(x, y));
             }
         }
-
-        animalCoordinates = new HashMap<>();
     }
 
     public void populateAnimals() {
@@ -39,14 +33,11 @@ public class SimulationArea {
         Coordinates coordinates = Coordinates.of(0, 0);
         Cell cell = getCell(coordinates);
         cell.populate(wolf);
-
-        animalCoordinates.put(wolf, coordinates);
     }
 
     public Cell getCell(Coordinates coordinates) {
         try {
-        return cells[coordinates.getX()][coordinates.getY()];
-
+            return cells[coordinates.getY()][coordinates.getX()];
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ArrayIndexOutOfBoundsException(coordinates.toString());
         }
@@ -61,6 +52,31 @@ public class SimulationArea {
     }
 
     public void rollDay() {
-        System.out.println("Day was rolled");
+        clearProcessedFlag();
+        CoordinatesIterator it = new CoordinatesIterator(rows, columns);
+        while (it.hasNext()) {
+            Coordinates coordinates = it.next();
+
+            Cell cell = getCell(coordinates);
+            if (cell.isPopulated() && !cell.isProcessed()) {
+                Animal animal = cell.evict();
+                Movement movement = animal.makeMove();
+
+                Coordinates newCoordinates = coordinates.move(movement);
+                Cell newCell = getCell(newCoordinates);
+
+                newCell.populate(animal);
+                newCell.setProcessed(true);
+            }
+        }
+    }
+
+    private void clearProcessedFlag() {
+        CoordinatesIterator it = new CoordinatesIterator(rows, columns);
+        while (it.hasNext()) {
+            Coordinates coordinates = it.next();
+            Cell cell = getCell(coordinates);
+            cell.setProcessed(false);
+        }
     }
 }

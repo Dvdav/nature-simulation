@@ -3,8 +3,6 @@ package dvdav;
 import dvdav.javafx.SpringFxmlLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
