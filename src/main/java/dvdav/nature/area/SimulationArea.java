@@ -1,16 +1,21 @@
-package dvdav.nature;
+package dvdav.nature.area;
 
 import dvdav.math.Coordinates;
-import dvdav.math.CoordinatesIterator;
+import dvdav.math.NearbyElements;
+import dvdav.math.Table;
+import dvdav.nature.animal.Animal;
+import dvdav.nature.animal.Wolf;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.Iterator;
 
 @Component
 public class SimulationArea {
 
     private final int rows;
     private final int columns;
-    private final Cell[][] cells;
+    private final Table<Cell> map;
 
     public SimulationArea(
             @Value("${simulation.cell.rows}") int rows,
@@ -18,12 +23,14 @@ public class SimulationArea {
     ) {
         this.rows = rows;
         this.columns = columns;
-        this.cells = new Cell[rows][columns];
+        this.map = new Table<>(columns, rows);
 
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < columns; x++) {
-                cells[y][x] = new Cell(new Coordinates(x, y));
-            }
+        addCells();
+    }
+
+    private void addCells() {
+        for (Coordinates coordinates : map) {
+            map.add(coordinates, new Cell(coordinates));
         }
     }
 
@@ -37,7 +44,7 @@ public class SimulationArea {
 
     public Cell getCell(Coordinates coordinates) {
         try {
-            return cells[coordinates.getY()][coordinates.getX()];
+            return map.get(coordinates);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ArrayIndexOutOfBoundsException(coordinates.toString());
         }
@@ -53,14 +60,14 @@ public class SimulationArea {
 
     public void rollDay() {
         clearProcessedFlag();
-        CoordinatesIterator it = new CoordinatesIterator(rows, columns);
-        while (it.hasNext()) {
-            Coordinates coordinates = it.next();
 
+        for (Coordinates coordinates : map) {
             Cell cell = getCell(coordinates);
             if (cell.isPopulated() && !cell.isProcessed()) {
+                NearbyElements<Cell> cells = map.getNearbyElements(coordinates);
+
                 Animal animal = cell.evict();
-                Movement movement = animal.makeMove();
+                Movement movement = animal.makeMove(cells);
 
                 Coordinates newCoordinates = coordinates.move(movement);
                 Cell newCell = getCell(newCoordinates);
@@ -72,11 +79,13 @@ public class SimulationArea {
     }
 
     private void clearProcessedFlag() {
-        CoordinatesIterator it = new CoordinatesIterator(rows, columns);
-        while (it.hasNext()) {
-            Coordinates coordinates = it.next();
+        for (Coordinates coordinates : map) {
             Cell cell = getCell(coordinates);
             cell.setProcessed(false);
         }
+    }
+
+    public Iterator<Coordinates> iterator() {
+        return map.iterator();
     }
 }

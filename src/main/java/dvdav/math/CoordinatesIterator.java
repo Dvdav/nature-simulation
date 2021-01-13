@@ -2,7 +2,7 @@ package dvdav.math;
 
 import java.util.Iterator;
 
-public class CoordinatesIterator implements Iterator<Coordinates> {
+class CoordinatesIterator implements Iterator<Coordinates> {
 
     private final int rows;
     private final int columns;
@@ -19,7 +19,7 @@ public class CoordinatesIterator implements Iterator<Coordinates> {
 
     @Override
     public boolean hasNext() {
-        return !(currentX == columns - 1 && currentY == rows - 1);
+        return !(currentX == columns && currentY == rows - 1);
     }
 
     @Override

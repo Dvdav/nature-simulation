@@ -1,6 +1,7 @@
-package dvdav.nature;
+package dvdav.nature.area;
 
 import dvdav.math.Coordinates;
+import dvdav.nature.animal.Animal;
 
 public class Cell {
     private final Coordinates coordinates;

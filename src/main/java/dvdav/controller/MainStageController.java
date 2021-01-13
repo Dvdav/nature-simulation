@@ -2,11 +2,9 @@ package dvdav.controller;
 
 import dvdav.SceneReadyEvent;
 import dvdav.math.Coordinates;
-import dvdav.math.CoordinatesIterator;
-import dvdav.nature.SimulationArea;
+import dvdav.nature.area.SimulationArea;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 @Controller
@@ -49,9 +48,7 @@ public class MainStageController implements Initializable {
 
     @EventListener
     public void processEvent(SceneReadyEvent event) {
-        Scene scene = event.getScene();
-
-        scene.setOnKeyPressed(e -> {
+        event.getScene().setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.SPACE) {
                 simulationArea.rollDay();
                 syncCells();
@@ -60,10 +57,11 @@ public class MainStageController implements Initializable {
     }
 
     private void syncCells() {
-        CoordinatesIterator it = new CoordinatesIterator(simulationArea.getRows(), simulationArea.getColumns());
+        Iterator<Coordinates> it = simulationArea.iterator();
+
         while (it.hasNext()) {
             Coordinates coordinates = it.next();
-            dvdav.nature.Cell areaCell = simulationArea.getCell(coordinates);
+            dvdav.nature.area.Cell areaCell = simulationArea.getCell(coordinates);
             Cell gridCell = grid.getCell(coordinates);
 
             if (areaCell.isPopulated()) {
