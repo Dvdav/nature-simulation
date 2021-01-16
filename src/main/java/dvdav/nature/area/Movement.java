@@ -1,5 +1,5 @@
 package dvdav.nature.area;
 
 public enum Movement {
-    UP, RIGHT, DOWN, LEFT
+    UP, RIGHT, DOWN, LEFT, STAY
 }

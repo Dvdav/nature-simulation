@@ -34,6 +34,7 @@ public class Coordinates {
             case DOWN -> of(x, y + 1);
             case LEFT -> of(x - 1, y);
             case RIGHT -> of(x + 1, y);
+            case STAY -> this;
         };
     }
 }
