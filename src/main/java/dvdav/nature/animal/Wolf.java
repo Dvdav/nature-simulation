@@ -12,25 +12,33 @@ public class Wolf extends Animal {
 
     @Override
     protected Movement eat(NearbyElements<Cell> nearbyArea) {
-        return Movement.STAY;
-    }
-
-    Movement makeMove(NearbyElements<Cell> nearbyArea) {
         Cell onLeft = nearbyArea.getOnLeft();
         Cell onRight = nearbyArea.getOnRight();
         Cell onTop = nearbyArea.getOnTop();
         Cell onBottom = nearbyArea.getOnBottom();
 
-        if (onLeft != null && !onLeft.isPopulated()) {
-            return Movement.LEFT;
-        } else if (onRight != null && !onRight.isPopulated()) {
-            return Movement.RIGHT;
-        } else if (onTop != null && !onTop.isPopulated()) {
-            return Movement.UP;
-        } else if (onBottom != null && !onBottom.isPopulated()) {
-            return Movement.DOWN;
+        Rabbit rabbit;
+        Movement movement;
+
+        if (onLeft != null && onLeft.isPopulated() && onLeft.getPopulation() instanceof Rabbit) {
+            movement = Movement.LEFT;
+            rabbit = (Rabbit) onLeft.getPopulation();
+        } else if (onRight != null && onRight.isPopulated() && onRight.getPopulation() instanceof Rabbit) {
+            movement = Movement.RIGHT;
+            rabbit = (Rabbit) onRight.getPopulation();
+        } else if (onTop != null && onTop.isPopulated() && onTop.getPopulation() instanceof Rabbit) {
+            movement = Movement.UP;
+            rabbit = (Rabbit) onTop.getPopulation();
+        } else if (onBottom != null && onBottom.isPopulated() && onBottom.getPopulation() instanceof Rabbit) {
+            movement = Movement.DOWN;
+            rabbit = (Rabbit) onBottom.getPopulation();
         } else {
-            return Movement.STAY;
+            return makeMove(nearbyArea);
         }
+
+        rabbit.kill();
+        satiety = 1.0;
+
+        return movement;
     }
 }

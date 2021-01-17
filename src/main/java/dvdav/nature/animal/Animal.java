@@ -1,8 +1,12 @@
 package dvdav.nature.animal;
 
+import dvdav.math.CellRandomizer;
 import dvdav.math.NearbyElements;
 import dvdav.nature.area.Cell;
 import dvdav.nature.area.Movement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Animal {
 
@@ -34,5 +38,28 @@ public abstract class Animal {
 
     abstract Movement eat(NearbyElements<Cell> nearbyArea);
 
-    abstract Movement makeMove(NearbyElements<Cell> nearbyArea);
+    Movement makeMove(NearbyElements<Cell> nearbyArea) {
+        List<Movement> possibleMovements = new ArrayList<>();
+
+        Cell onLeft = nearbyArea.getOnLeft();
+        Cell onRight = nearbyArea.getOnRight();
+        Cell onTop = nearbyArea.getOnTop();
+        Cell onBottom = nearbyArea.getOnBottom();
+
+        possibleMovements.add(Movement.STAY);
+        if (onLeft != null && !onLeft.isPopulated()) {
+            possibleMovements.add(Movement.LEFT);
+        }
+        if (onRight != null && !onRight.isPopulated()) {
+            possibleMovements.add(Movement.RIGHT);
+        }
+        if (onTop != null && !onTop.isPopulated()) {
+            possibleMovements.add(Movement.UP);
+        }
+        if (onBottom != null && !onBottom.isPopulated()) {
+            possibleMovements.add(Movement.DOWN);
+        }
+
+        return CellRandomizer.getRandom(possibleMovements);
+    }
 }
